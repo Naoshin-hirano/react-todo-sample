@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import "./App.css";
+import { Footer } from "./Components/footer";
+import { TextField } from "./Components/textField";
+import { TodoList } from "./Components/todolist";
 
 function App() {
     const [text, setText] = useState("");
     const [todos, setTodos] = useState<any>([]);
     const [count, setCount] = useState(1);
 
-    console.log("レンダー");
+    console.log("App");
 
     // テキストフィールドの入力
     const handleChange = (e: any) => {
@@ -90,103 +93,20 @@ function App() {
     return (
         <div className="App">
             <div className="todoapp">
-                <form id="js-form" onSubmit={onSubmit}>
-                    <input
-                        id="js-form-input"
-                        className="new-todo"
-                        type="text"
-                        placeholder="What need to be done?"
-                        autoComplete="off"
-                        value={text}
-                        onChange={(e) => {
-                            handleChange(e);
-                        }}
-                    />
-                </form>
-                <div id="keep-btn" onClick={onSubmit}>
-                    保存
-                </div>
-                <div id="js-todo-list" className="todo-list">
-                    <ul>
-                        {todos &&
-                            todos.map((item: any, index: number) => {
-                                return (
-                                    <li key={index}>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox"
-                                            value={item.id}
-                                            onChange={(e) => {
-                                                handleComplete(e);
-                                            }}
-                                        />
-                                        <span className="editZone"></span>
-                                        {item.editMode ? (
-                                            <input
-                                                id={item.id}
-                                                type="text"
-                                                className="editField"
-                                                placeholder={item.title}
-                                                value={item.title}
-                                                onChange={(e) => {
-                                                    handleEditChange(e);
-                                                }}
-                                            />
-                                        ) : (
-                                            <span className="title">
-                                                {item.completed ? (
-                                                    <s>{item.title}</s>
-                                                ) : (
-                                                    item.title
-                                                )}
-                                            </span>
-                                        )}
-                                        <button
-                                            className="delete"
-                                            onClick={() => {
-                                                deleteItem(item.id);
-                                            }}
-                                        >
-                                            x
-                                        </button>
-                                        <span className="editBtnZone"></span>
-                                        {item.editMode ? (
-                                            <button
-                                                className="editSave"
-                                                onClick={() => {
-                                                    editItem(item.id);
-                                                }}
-                                            >
-                                                保存
-                                            </button>
-                                        ) : (
-                                            <button
-                                                className="edit"
-                                                onClick={() => {
-                                                    editItem(item.id);
-                                                }}
-                                            >
-                                                編集
-                                            </button>
-                                        )}
-                                    </li>
-                                );
-                            })}
-                    </ul>
-                </div>
-                <footer className="footer">
-                    <span id="js-todo-count">
-                        Todoアイテム数: {todos.length}
-                    </span>
-                    <br />
-                    <span id="non-complete">
-                        未完了: {todos.length - getCheckedCount()}
-                    </span>
-                    <br />
-                    <span id="completed">完了済み: {getCheckedCount()}</span>
-                </footer>
+                <TextField
+                    onSubmit={onSubmit}
+                    text={text}
+                    handleChange={handleChange}
+                />
+                <TodoList
+                    todos={todos}
+                    handleComplete={handleComplete}
+                    handleEditChange={handleEditChange}
+                    deleteItem={deleteItem}
+                    editItem={editItem}
+                />
+                <Footer todos={todos} getCheckedCount={getCheckedCount} />
             </div>
-            ;
         </div>
     );
 }
