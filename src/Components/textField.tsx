@@ -1,5 +1,6 @@
-import React from "react";
-export const TextField = ({ onSubmit, text, handleChange }: any) => {
+import React, { memo } from "react";
+export const TextField = memo(({ onSubmit, text, handleChange }: any) => {
+    console.log("Textfield");
     return (
         <>
             <form id="js-form" onSubmit={onSubmit}>
@@ -20,4 +21,4 @@ export const TextField = ({ onSubmit, text, handleChange }: any) => {
             </div>
         </>
     );
-};
+});
