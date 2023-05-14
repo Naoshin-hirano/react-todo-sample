@@ -4,24 +4,39 @@ import { Footer } from "./Components/footer";
 import { TextField } from "./Components/textField";
 import { TodoList } from "./Components/todolist";
 
+export interface Todo {
+    id: number;
+    title: string;
+    completed: boolean;
+    editMode: boolean;
+}
+export type HandleTodo = (id: number) => void;
+export type HandleChangeModel = (
+    e: React.ChangeEvent<HTMLInputElement>
+) => void;
+
 function App() {
     const [text, setText] = useState("");
-    const [todos, setTodos] = useState<any>([]);
+    const [todos, setTodos] = useState<Todo[]>([]);
     const [count, setCount] = useState(1);
 
     console.log("App");
 
     // テキストフィールドの入力
     const handleChange = useCallback(
-        (e: any) => {
+        (e: React.ChangeEvent<HTMLInputElement>) => {
             setText(e.target.value);
         },
-        [text]
+        []
     );
 
     // Todoの投稿
     const onSubmit = useCallback(
-        (e: any) => {
+        (
+            e:
+                | React.MouseEvent<HTMLDivElement, MouseEvent>
+                | React.FormEvent<HTMLFormElement>
+        ) => {
             e.preventDefault();
             if (!text) {
                 alert("文字を入力してください");
@@ -35,6 +50,8 @@ function App() {
             ];
             setTodos(newTodos);
         },
+        // countとtodosを依存配列に入れるとonSubmitをpropsとして受け取るtextFildコンポーネントも再描画走るのでwarning出ないようにする
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [text]
     );
 
@@ -45,7 +62,7 @@ function App() {
             if (!question) {
                 return;
             }
-            let newItems = todos.filter((item: any) => item.id !== id);
+            let newItems = todos.filter((item: Todo) => item.id !== id);
             setTodos(newItems);
         },
         [todos]
@@ -53,10 +70,10 @@ function App() {
 
     // Todoの編集
     const editItem = useCallback(
-        (id: any) => {
-            const newTodos = todos.map((item: any) => {
+        (id: number) => {
+            const newTodos = todos.map((item: Todo) => {
                 const newItem = { ...item };
-                if (newItem.id == id) {
+                if (newItem.id === id) {
                     newItem.editMode = !newItem.editMode;
                 }
                 return newItem;
@@ -68,11 +85,10 @@ function App() {
 
     // Todoの完了チェック
     const handleComplete = useCallback(
-        (e: any) => {
-            const newTodos = todos.map((item: any) => {
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const newTodos = todos.map((item: Todo) => {
                 const newItem = { ...item };
-                // todo: 型を合わせたら===にする
-                if (newItem.id == e.target.value) {
+                if (newItem.id === Number(e.target.value)) {
                     newItem.completed = !newItem.completed;
                 }
                 return newItem;
@@ -84,10 +100,10 @@ function App() {
 
     // Todoのタイトルを編集モードへ
     const handleEditChange = useCallback(
-        (e: any) => {
-            const newTodos = todos.map((item: any) => {
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const newTodos = todos.map((item: Todo) => {
                 const newItem = { ...item };
-                if (newItem.id == e.target.id) {
+                if (newItem.id === Number(e.target.id)) {
                     newItem.title = e.target.value;
                 }
                 return newItem;

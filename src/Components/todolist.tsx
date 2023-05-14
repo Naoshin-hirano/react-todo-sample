@@ -1,4 +1,14 @@
 import React, { memo } from "react";
+import { HandleChangeModel, HandleTodo, Todo } from "../App";
+
+interface TodoListModel {
+    todos: Todo[];
+    handleComplete: HandleChangeModel;
+    handleEditChange: HandleChangeModel;
+    deleteItem: HandleTodo;
+    editItem: HandleTodo;
+}
+
 export const TodoList = memo(
     ({
         todos,
@@ -6,13 +16,13 @@ export const TodoList = memo(
         handleEditChange,
         deleteItem,
         editItem,
-    }: any) => {
+    }: TodoListModel) => {
         console.log("Todolist");
         return (
             <div id="js-todo-list" className="todo-list">
                 <ul>
                     {todos &&
-                        todos.map((item: any, index: number) => {
+                        todos.map((item: Todo, index: number) => {
                             return (
                                 <li key={index}>
                                     <input
@@ -27,7 +37,7 @@ export const TodoList = memo(
                                     <span className="editZone"></span>
                                     {item.editMode ? (
                                         <input
-                                            id={item.id}
+                                            id={String(item.id)}
                                             type="text"
                                             className="editField"
                                             placeholder={item.title}

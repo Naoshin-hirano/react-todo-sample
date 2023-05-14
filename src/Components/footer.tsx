@@ -1,5 +1,12 @@
 import React, { memo } from "react";
-export const Footer = memo(({ todos, getCheckedCount }: any) => {
+import { Todo } from "../App";
+
+interface FooterModel {
+    todos: Todo[];
+    getCheckedCount: () => number;
+}
+
+export const Footer = memo(({ todos, getCheckedCount }: FooterModel) => {
     console.log("Footer");
     return (
         <footer className="footer">
